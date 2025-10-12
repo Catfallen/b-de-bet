@@ -1,0 +1,23 @@
+{
+  "name": "webhook",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "node app.js",
+    "register-webhook": "node register-webhook.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "axios": "^1.12.2",
+    "dotenv": "^17.2.3",
+    "express": "^5.1.0",
+    "mercadopago": "^2.9.0",
+    "node-fetch": "^3.3.2"
+  },
+  "devDependencies": {
+    "ngrok": "^5.0.0-beta.2"
+  }
+}
