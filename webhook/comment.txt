@@ -1,0 +1,66 @@
+async function webhook(req, res) {
+    try {
+        // 1️⃣ Responde rápido para o Mercado Pago não reenviar notificações
+        res.sendStatus(200);
+
+        // 2️⃣ Extrai o body do webhook e o paymentId
+        const body = req.body;
+        const paymentId = body.data?.id || body.id;
+
+        if (!paymentId) {
+            console.warn("⚠️ Webhook recebido sem payment id:", body);
+            return;
+        }
+
+        // 3️⃣ Evita processar o mesmo pagamento várias vezes em curto período
+        if (processedPayments.has(paymentId)) {
+            console.log("Pagamento já processado:", paymentId);
+            return;
+        }
+        processedPayments.add(paymentId);
+        setTimeout(() => processedPayments.delete(paymentId), 60000); // limpa cache em 1 minuto
+
+        // 4️⃣ Consulta detalhes do pagamento usando SDK do Mercado Pago
+        const paymentInstance = new Payment(client);
+        const info = await paymentInstance.get({ id: paymentId });
+
+        // 5️⃣ Extrai o status do pagamento
+        const status = info.status || 'unknown';
+        console.log(`💰 Pagamento ${paymentId} status: ${status}`);
+
+        // 6️⃣ Aqui você precisa inserir ou atualizar o registro na tabela 'pagamentos'
+        // INSERT INTO pagamentos (payment_id, status, valor, payload, data_recebimento)
+        // VALUES (paymentId, status, info.transaction_amount, info, NOW())
+        // ON CONFLICT (payment_id) DO UPDATE SET status = EXCLUDED.status, valor = EXCLUDED.valor, payload = EXCLUDED.payload;
+
+        // 7️⃣ Lida com os diferentes status de pagamento
+        if (status === 'approved') {
+            console.log(`✅ Pagamento aprovado!`);
+            // a) Inserir uma transação na tabela 'transacoes' do tipo 'deposito'
+            // INSERT INTO transacoes (pagamento_id, tipo, valor, data_transacao)
+            // VALUES (paymentId, 'deposito', info.transaction_amount, NOW());
+            
+            // b) A trigger no banco irá automaticamente atualizar o saldo na tabela 'monetaria'
+
+            // c) Aqui você pode: enviar email, liberar produto, logar detalhes, etc.
+
+        } else if (status === 'rejected') {
+            console.log(`❌ Pagamento rejeitado.`);
+            // Opcional: registrar tentativa de pagamento rejeitado
+        } else if (status === 'pending'){
+            console.log(`🕒 Pagamento Pendente.`);
+            // Opcional: enviar alerta para o usuário que o pagamento ainda não foi confirmado
+        } else if (status === 'cancelled'){  
+            console.log(`PAGAMENTO CANCELADO`);
+            // Opcional: atualizar registro de pagamento ou transação se necessário
+        } else {
+            console.log("Status inválido")
+        }
+
+        // 8️⃣ Opcional: armazenar payload completo do webhook para histórico ou auditoria
+        // INSERT INTO pagamentos (payload) VALUES (body);
+
+    } catch (err) {
+        console.error("❗Erro processando webhook:", err);
+    }
+}

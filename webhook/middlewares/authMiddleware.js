@@ -10,7 +10,9 @@ function authMiddleware(req, res, next) {
 
   try {
     const decoded = verifyToken(token);
-    req.user = decoded; // armazena dados do usuário no request
+    console.log(decoded);
+    req.userId = decoded.id; // armazena dados do usuário no request
+    console.log(req.userId);
     next();
   } catch (err) {
     return res.status(403).json({ message: 'Token inválido ou expirado' });
