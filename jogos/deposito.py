@@ -3,10 +3,11 @@ from PyQt5.QtWidgets import (
     QWidget, QVBoxLayout, QLabel, QLineEdit, QPushButton, QMessageBox
 )
 from PyQt5.QtCore import pyqtSignal
-
+import utils  # ✅ importa o arquivo com o TOKEN global
+from qrcode_tela import QrCodeWindow  # certifique-se de importar a classe
 
 class DepositoWindow(QWidget):
-    abrir_qrcode = pyqtSignal(dict,dict)  # sinal para abrir a tela do QR Code
+    abrir_qrcode = pyqtSignal(dict, dict)  # sinal para abrir a tela do QR Code
 
     def __init__(self):
         super().__init__()
@@ -41,6 +42,10 @@ class DepositoWindow(QWidget):
             QMessageBox.warning(self, "Erro", "Preencha todos os campos.")
             return
 
+        if not utils.TOKEN:
+            QMessageBox.critical(self, "Erro", "Token de autenticação não encontrado. Faça login novamente.")
+            return
+
         try:
             data = {
                 "transaction_amount": float(valor),
@@ -48,17 +53,34 @@ class DepositoWindow(QWidget):
                 "payer_email": email
             }
 
-            response = requests.post("http://localhost:3000/pagar", json=data)
+            headers = {
+                "Authorization": f"Bearer {utils.TOKEN}",
+                "Content-Type": "application/json"
+            }
 
-            if response.status_code in (200,201):
+            response = requests.post(
+                "http://localhost:3000/payments/pagar",
+                json=data,
+                headers=headers
+            )
+
+            if response.status_code in (200, 201):
                 try:
                     dados = response.json()
-                    print('dados')
-                    self.abrir_qrcode.emit(dados,data)  # envia dados para a tela de QR
+                    print("dados:", dados)
+
+                    # Aqui abrimos a janela diretamente, sem usar sinal
+                    self.qr_window = QrCodeWindow(dados, data)
+                    self.qr_window.show()
+
                 except ValueError:
                     QMessageBox.warning(self, "Erro", "Resposta inválida do servidor.")
             else:
-                QMessageBox.warning(self, "Erro", f"Falha ao processar pagamento ({response.status_code})")
+                try:
+                    err = response.json().get("error", response.text)
+                except ValueError:
+                    err = response.text
+                QMessageBox.warning(self, "Erro", f"Falha ao processar pagamento ({response.status_code})\n{err}")
 
         except Exception as e:
             QMessageBox.critical(self, "Erro", f"Ocorreu um erro: {str(e)}")

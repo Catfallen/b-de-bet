@@ -1,7 +1,7 @@
 # login_screen.py
 import requests
 from PyQt5.QtWidgets import QWidget, QVBoxLayout, QLabel, QLineEdit, QPushButton, QMessageBox
-from utils import API_URL, TOKEN
+import utils
 
 class LoginScreen(QWidget):
     def __init__(self, stack):
@@ -33,13 +33,12 @@ class LoginScreen(QWidget):
         self.setLayout(layout)
 
     def login(self):
-        global TOKEN
         data = {
             "email": self.email_input.text(),
             "senha": self.password_input.text()
         }
         try:
-            response = requests.post(API_URL + "login", json=data)
+            response = requests.post(utils.API_URL + "login", json=data)
             try:
                 res_json = response.json()
             except ValueError:
@@ -47,8 +46,13 @@ class LoginScreen(QWidget):
                 return
 
             if response.status_code == 200:
-                TOKEN = res_json.get("token")
+                utils.TOKEN = res_json.get("token")
                 QMessageBox.information(self, "Sucesso", "Login realizado com sucesso!")
+    
+    # atualiza o menu antes de mudar de tela
+                menu_screen = self.stack.widget(2)
+                menu_screen.update_token_label()
+    
                 self.stack.setCurrentIndex(2)
             else:
                 QMessageBox.warning(self, "Erro", res_json.get("error", "Falha no login"))
