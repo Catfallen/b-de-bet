@@ -122,4 +122,49 @@ async function webhook(req, res) {
     }
 }
 
-module.exports = { pagar, webhook };
+async function paymentsList(req,res) {
+    try{
+        const userId = req.userId;
+        const lista = await pagamentoService.getPagamentos({userId})
+        if (!lista){
+            return res.status(404).json("Não foi possivel fazer a consulta dos pagamentos");
+        }
+        return res.status(200).json(lista);
+    }catch(err){
+        return res.status(500).json({"msg":"Erro na consulta dos pagamentos"})
+    }
+}
+
+async function transacoes_aprovadas(req,res) {
+     try{
+        const userId = req.userId;
+        const lista = await pagamentoService.getTransacoes({userId})
+        if (!lista){
+            return res.status(404).json("Não foi possivel fazer a consulta dos pagamentos");
+        }
+        return res.status(200).json(lista);
+    }catch(err){
+        return res.status(500).json({"msg":"Erro na consulta das transações"})
+    }
+}
+
+async function saldoAtual(req,res) {
+    try{
+        const userId = req.userId;
+        const saldo = await pagamentoService.getSaldoAtual({userId});
+        if(!saldo){
+            return res.status(404).json("Saldo não encontrado");
+        }
+        return res.status(200).json({"saldo":saldo});
+    }catch(err){
+        return res.status(500).json({'msg':"Erro na consulta do saldo atual"});
+    }
+}
+
+module.exports = { 
+    pagar, 
+    webhook, 
+    paymentsList,
+    transacoes_aprovadas,
+    saldoAtual
+};

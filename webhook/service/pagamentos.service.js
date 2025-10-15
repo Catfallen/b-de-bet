@@ -59,5 +59,46 @@ async function atualizarPagamento({ payment_id, status, payload }) {
     }
 }
 
+async function getPagamentos({userId}) {
+    try{
+        const query = `select id,usuario_id,payment_id,status,valor,data_recebimento from pagamentos where usuario_id = $1`;
+        const values = [userId];
+        const {rows} = await pool.query(query,values);
+        console.log(rows);
+        return rows;
+    }catch(err){
+        console.log("Erro na consulta do pagamentos",err);
+        return false;
+    }
+}
 
-module.exports = {novoPagamento,atualizarPagamento};
+async function getTransacoes({userId}) {
+    try{
+        const query = `select * from transacoes where usuario_id = $1`
+        const values = [userId];
+        const {rows} = await pool.query(query,values);
+        return rows;
+    }catch(err){
+        console.log("Erro na consulta das transações",err)
+    }
+}
+
+async function getSaldoAtual({userId}) {
+    try{
+        const query = `select saldo from saldo_atual where usuario_id = $1`;
+        const values = [userId];
+        const {rows} = await pool.query(query,values);
+        return rows[0];
+    }catch(err){
+        console.log("Erro na consulta do saldo atual");
+        return false;
+    }
+}
+
+module.exports = {
+    novoPagamento,
+    atualizarPagamento,
+    getPagamentos,
+    getTransacoes,
+    getSaldoAtual
+};
