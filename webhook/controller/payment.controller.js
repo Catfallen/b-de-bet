@@ -155,7 +155,7 @@ async function saldoAtual(req,res) {
         if(!saldo){
             return res.status(404).json("Saldo não encontrado");
         }
-        return res.status(200).json({"saldo":saldo});
+        return res.status(200).json(saldo);
     }catch(err){
         return res.status(500).json({'msg':"Erro na consulta do saldo atual"});
     }
