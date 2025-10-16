@@ -10,6 +10,9 @@ async function novaAposta(req,res,next) {
         if(!saldo || parseFloat(saldo.saldo) < valor){
             return res.status(302).json("Saldo insulficiente");
         }
+        if(valor > 0){
+            valor = valor*-1;
+        }
         const aposta_id = await betService.newBet({userId,valor});
         if(!aposta_id){
             return res.status(500).json({"msg":"NãO foi possivel criar a aposta"});

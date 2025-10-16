@@ -12,4 +12,17 @@ async function newBet({userId,valor}) {
     }
 }
 
-module.exports = {newBet};
+async function updateBet({id,valor}) {
+    console.log('update bet');
+    try{
+        const query = `update apostas set status = 'approved', valor = $2 where id = $1 RETURNING id`;
+        const values = [id,valor];
+        const {rows} = await pool.query(query,values);
+        return rows[0];
+    }catch(err){
+        console.log('Erro na atualização da aposta',err);
+        return false;
+    }
+}
+
+module.exports = {newBet,updateBet};

@@ -6,6 +6,8 @@ const router = express.Router();
 
 
 router.post("/apostar/roleta",authMiddleware,betController.novaAposta,roletaController.novaRoletaBet);
+router.put("/apostar/roleta",authMiddleware,)
+
 //router.post("/apostar/mines",authMiddleware);
 //router.post("/apostar/777_classic",authMiddleware);
 

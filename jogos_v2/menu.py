@@ -4,7 +4,7 @@ from PyQt6.QtWidgets import (
     QPushButton, QMessageBox, QListWidget, QListWidgetItem
 )
 from PyQt6.QtCore import Qt
-
+from roleta import JanelaPrincipal
 
 class MenuWindow(QWidget):
     def __init__(self, token=""):
@@ -92,7 +92,14 @@ class MenuWindow(QWidget):
     def abrir_jogo(self, item):
         """Abre o jogo selecionado"""
         jogo = item.text()
-        QMessageBox.information(self, "Abrir jogo", f"Abrindo {jogo}... (em breve)")
+        
+        if jogo == "Roleta":
+            try:
+            # Executa o script roleta.py em um novo processo Python
+                self.roleta_window = JanelaPrincipal(token=self.token)
+                self.roleta_window.show()
+            except Exception as e:
+                QMessageBox.critical(self, "Erro", f"Erro ao abrir o jogo Roleta:\n{e}")
 
     def voltar_menu(self):
         """Retorna ao menu principal"""
