@@ -73,22 +73,19 @@ async function webhook(req, res) {
             return;
         }
 
-        // 3️⃣ Evita processar duplicado
-        if (processedPayments.has(paymentId)) {
-            console.log("Pagamento já processado:", paymentId);
-            return;
-        }
-
-        processedPayments.add(paymentId);
-        setTimeout(() => processedPayments.delete(paymentId), 60000);
-
-        // 4️⃣ Consulta detalhes do pagamento
+        // 3️⃣ Consulta detalhes do pagamento
         const paymentInstance = new Payment(client);
         const info = await paymentInstance.get({ id: paymentId });
 
-        // 5️⃣ Extrai o status
+        // 4️⃣ Extrai o status
         const status = info.status || 'unknown';
         console.log(`💰 Pagamento ${paymentId} status: ${status}`);
+
+        // 5️⃣ Evita processar duplicado apenas para status finalizados
+        if (['approved', 'rejected', 'cancelled'].includes(status) && processedPayments.has(paymentId)) {
+            console.log("Pagamento já processado:", paymentId);
+            return;
+        }
 
         // 6️⃣ Atualiza ou registra o pagamento
         const success = await pagamentoService.atualizarPagamento({
@@ -103,7 +100,13 @@ async function webhook(req, res) {
             console.log("💾 Pagamento atualizado com sucesso:", info.id);
         }
 
-        // 7️⃣ Ações conforme o status
+        // 7️⃣ Marca como processado apenas para status finalizados
+        if (['approved', 'rejected', 'cancelled'].includes(status)) {
+            processedPayments.add(paymentId);
+            setTimeout(() => processedPayments.delete(paymentId), 60000);
+        }
+
+        // 8️⃣ Ações conforme o status
         if (status === 'approved') {
             console.log(`✅ Pagamento aprovado!`);
             // ex: atualizar saldo, liberar acesso, etc.

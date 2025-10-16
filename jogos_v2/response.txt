@@ -1,0 +1,30 @@
+cores = ["vermelho", "preto", "branco"]
+        resultado_final = api(self.aposta ,self.escolha_jogador)
+        # Probabilidades: 48% para Vermelho, 48% para Preto, 4% para Branco
+        self.resultado_final = random.choices(cores, weights=[48, 48, 4])[0]
+post http://localhost:3000/bet/apostar/roleta
+header{
+    token
+}
+body
+{
+    "valor":1,"cor":"preto"
+}
+resposta
+{
+    "userId": 1,
+    "valor": -1,
+    "aposta_id": 68,
+    "cor": "preto",
+    "corAleatoria": "vermelho",
+    "resultado": false,
+    "idRoleta": {
+        "id": 32,
+        "usuario_id": 1,
+        "aposta_id": "68",
+        "cor_cliente": "preto",
+        "cor_server": "vermelho",
+        "resultado": false,
+        "data_criacao": "2025-10-16T17:55:40.507Z"
+    }
+}

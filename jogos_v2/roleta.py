@@ -177,45 +177,64 @@ class JanelaPrincipal(QMainWindow):
         if not self.escolha_jogador:
             self.label.setText("Escolha uma cor primeiro!")
             return
-            
-        # 1. Validação da Aposta
+    
+    # 1. Validação da aposta
         try:
-            # Tenta converter o texto do input para inteiro
             self.aposta = int(self.aposta_input.text())
             if self.aposta <= 0:
-                self.label.setText("A aposta deve ser um valor positivo!")
+                self.label.setText("A aposta deve ser positiva!")
                 return
         except ValueError:
-            self.label.setText("Por favor, digite um número válido para a aposta!")
+            self.label.setText("Digite um número válido para a aposta!")
             return
-            
-        # 2. Validação de Saldo
+
+    # 2. Validação de saldo
         if self.saldo < self.aposta:
-            self.label.setText(f"Saldo insuficiente! Você tem {self.saldo} fichas e tentou apostar {self.aposta}.")
+            self.label.setText(f"Saldo insuficiente! Saldo: {self.saldo}")
             return
-            
-        # 3. Início do Giro
+
+    # 3. Início do giro
         self.girando = True
-        self.saldo -= self.aposta # Deduz a aposta do saldo
-        self.label.setText(f"Girando roleta... Aposta: {self.aposta} | Saldo: {self.saldo} fichas")
-        
-        # Desabilita controles durante o giro
+        self.saldo -= self.aposta
+        self.label.setText(f"Girando roleta... Aposta: {self.aposta} | Saldo: {self.saldo}")
+
+    # Desabilita botões e input
         self.botao_vermelho.setEnabled(False)
         self.botao_preto.setEnabled(False)
         self.botao_branco.setEnabled(False)
         self.botao_girar.setEnabled(False)
-        self.aposta_input.setEnabled(False) 
+        self.aposta_input.setEnabled(False)
 
-        # 4. Sorteio do Resultado Final (Back-end)
-        cores = ["vermelho", "preto", "branco"]
-        # Probabilidades: 48% para Vermelho, 48% para Preto, 4% para Branco
-        self.resultado_final = random.choices(cores, weights=[48, 48, 4])[0]
-        
-        # 5. Configuração da Animação
-        self.passos_restantes = 20 # Define o número de ticks do timer
-        self.timer.setInterval(80) # Define a velocidade inicial da animação
-        self.timer.start() # Inicia o timer para a animação
+    # 4. Chamada à API
+        import requests
+        url = "http://localhost:3000/bet/apostar/roleta"
+        headers = {"Authorization": f"Bearer {self.token}"}
+        payload = {"valor": self.aposta, "cor": self.escolha_jogador}
 
+        try:
+            r = requests.post(url, json=payload, headers=headers)
+            if r.status_code == 200:
+                dados = r.json()
+                print(dados)
+            # Resultado vindo do servidor
+                self.resultado_final = dados.get("corAleatoria", "gray")
+                self.ganho_total = dados.get("valor", 0)
+                self.resultado_bool = dados.get("resultado", False)
+            else:
+                self.resultado_final = "gray"
+                self.ganho_total = 0
+                self.resultado_bool = False
+                print("Erro API:", r.text)
+        except Exception as e:
+            self.resultado_final = "gray"
+            self.ganho_total = 0
+            self.resultado_bool = False
+            print("Erro ao chamar API:", e)
+
+    # 5. Configuração da animação
+        self.passos_restantes = 20
+        self.timer.setInterval(80)
+        self.timer.start()
     # Método chamado repetidamente pelo QTimer para criar a animação
     def animar_quadrado(self):
         # Enquanto houver mais de 1 passo restante, continua a animação rápida
