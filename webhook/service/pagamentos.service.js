@@ -85,9 +85,12 @@ async function getTransacoes({userId}) {
 
 async function getSaldoAtual({userId}) {
     try{
+        console.log('iniciando consulta do saldo atual')
+        console.log(userId);
         const query = `select saldo from saldo_atual where usuario_id = $1`;
         const values = [userId];
         const {rows} = await pool.query(query,values);
+        console.log(rows);
         return rows[0];
     }catch(err){
         console.log("Erro na consulta do saldo atual");
