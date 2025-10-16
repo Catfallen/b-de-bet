@@ -1,11 +1,13 @@
 import requests
 from PyQt6.QtWidgets import (
     QWidget, QVBoxLayout, QHBoxLayout, QLabel,
-    QPushButton, QMessageBox, QListWidget, QListWidgetItem
+    QPushButton, QMessageBox, QListWidget, QListWidgetItem,
+    QApplication
 )
 from PyQt6.QtCore import Qt
 from roleta import JanelaPrincipal
-
+from caca_niquel import JanelaCacaNiquel
+from mines import MinesGame
 class MenuWindow(QWidget):
     def __init__(self, token=""):
         super().__init__()
@@ -41,7 +43,7 @@ class MenuWindow(QWidget):
         layout_principal.addWidget(lbl_jogos)
 
         self.lista_jogos = QListWidget()
-        for jogo in ["Mines", "Roleta", "777 Classic"]:
+        for jogo in ["Mines", "Roleta", "Caça Níquel"]:
             item = QListWidgetItem(jogo)
             item.setTextAlignment(Qt.AlignmentFlag.AlignCenter)
             self.lista_jogos.addItem(item)
@@ -100,7 +102,19 @@ class MenuWindow(QWidget):
                 self.roleta_window.show()
             except Exception as e:
                 QMessageBox.critical(self, "Erro", f"Erro ao abrir o jogo Roleta:\n{e}")
-
+        elif jogo == "Caça Níquel":
+            try:
+                self.caca_window = JanelaCacaNiquel()
+                self.caca_window.show()
+            except Exception as e:
+                QMessageBox.critical(self, "Erro", f"Erro ao abrir o jogo Caça níquel:\n{e}")
+        elif jogo == "Mines":
+            try:
+                self.mines_window = MinesGame()
+                self.mines_window.show()
+            except Exception as e:
+                QMessageBox.critical(self, "Erro", f"Erro ao abrir o jogo Mines:\n{e}")
+            
     def voltar_menu(self):
         """Retorna ao menu principal"""
         QMessageBox.information(self, "Menu", "Você já está no menu principal 😎")
