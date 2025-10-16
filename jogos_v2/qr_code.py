@@ -12,7 +12,12 @@ class QrCodeWindow(QWidget):
         layout = QVBoxLayout()
 
         # Exibe informações básicas
-        info_label = QLabel(f"<b>Depósito:</b> R${valor:.2f}<br><b>Email:</b> {email}")
+        try:
+            valor_float = float(valor)
+        except (ValueError, TypeError):
+            valor_float = 0.0
+        
+        info_label = QLabel(f"<b>Depósito:</b> R${valor_float:.2f}<br><b>Email:</b> {email}")
         info_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
         layout.addWidget(info_label)
 

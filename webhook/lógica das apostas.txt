@@ -1,0 +1,20 @@
+Lógica de aposto do jogo Roleta(vermelho,preto,branco)
+Entidades
+
+Transações 
+'tipo':'aposta'
+'valor':'negativo'
+
+Roleta - 
+id da transação/aposta(fk)
+Cor do cliente
+Cor certa
+Resultado (verificar se são iguais)
+
+
+1. O front end python envia uma requisição post com uma 'cor'
+2. O servidor cria uma aposta na tabela roleta e define uma cor aleatoria
+3. Se for igual, ele dobra o valor apostado / senão retorna o valor negativo
+4. No caso ele atualiza o valor da transação
+
+Por enquanto não implemente as mudanças só me de dicas

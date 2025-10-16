@@ -83,7 +83,7 @@ class DepositoWindow(QWidget):
                       ===========
                       """)
             # Abrir janela QR Code
-                self.qr_window = QrCodeWindow(qr_text, qr_payload)
+                self.qr_window = QrCodeWindow(qr_text, qr_payload,valor,email)
                 self.qr_window.show()
                 self.close()
             else:

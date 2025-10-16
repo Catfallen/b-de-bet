@@ -15,11 +15,16 @@ const PORT = process.env.PORT || 3000;
 // Importa as rotas de pagamento
 const paymentRoutes = require('./routes/payment.routes');
 const authRoutes = require('./routes/authRoutes');
+const betRoutes = require('./routes/bet.routes');
 
-app.use('/auth',authRoutes);
+
+app.use('/auth',authRoutes,betRoutes);
 
 // Rota principal para pagamentos
 app.use("/payments", paymentRoutes);
+
+app.use("/bet",betRoutes)
+
 
 app.listen(PORT, () => {
     console.log(`✅ Servidor rodando em http://localhost:${PORT}`);
