@@ -15,7 +15,8 @@ async function novaAposta(req,res,next) {
             return res.status(500).json({"msg":"NãO foi possivel criar a aposta"});
         }
         req.valor = valor;
-        req.aposta_id = aposta_id;
+        req.aposta_id = aposta_id.id;
+        req.cor = req.body.cor;
         next();
     }catch(err){
         console.log("Erro na criação de uma nova aposta bet.Controller",err);
