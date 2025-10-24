@@ -54,6 +54,6 @@ Para que o **Mercado Pago** pudesse confirmar automaticamente os pagamentos, foi
 
 ## 🏁 Status do Projeto  
 
-✅ Projeto concluído como parte de avaliação acadêmica.  
-🔧 Futuras melhorias podem incluir a adição de novos jogos e um painel administrativo.  
+✅ **Primeira etapa:** desenvolvimento de um protótipo em uma semana — **concluída**.  
+🔧 **Segunda etapa:** outro grupo irá aprimorar nosso código, e nossa equipe também fará melhorias no projeto de um grupo sorteado.  
 """
