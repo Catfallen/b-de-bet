@@ -1,1 +1,0 @@
-o trigger funciona com o inser manual de um pagamento aprovado, porém em um update de 'pending' para 'approved' o trigger não é chamado
