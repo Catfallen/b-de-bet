@@ -1,6 +1,15 @@
+O sistema usa a api do mercado pago, você pode criar uma aplicação ou usar uma existente
+https://www.youtube.com/watch?v=Breblubtu-I&pp=ygUbbWVyY2FkbyBwYWdvIGRldmVsb3BlcnMgcGl4
+
+back end
+autenticação com hash e jwt
+criação de um novo pagamento
+envio da notificação de pagamento aprovado webhook
+
+
 1 - Clonar repositorio
 
-2 - importar schema do banco de dados
+2 - importar schema do banco de dados no postgres
 
 Estrutura
 Front-end: jogos_v2 
@@ -10,12 +19,13 @@ Back-end: webhook
 cd webhook
 npm install
 
-
-
 4 - Editar variaveis de ambiente
 webhook/.env
 
-5 - instalar o ngrok
+Obs: localhost
+
+5 - instalar o ngrok (opcional)
+Com o link gerado é preciso mudar a url da notificação no site do mercado pago
 
 6 - Inicializar api
 node app.js
