@@ -1,0 +1,39 @@
+1 - Clonar repositorio
+
+2 - importar schema do banco de dados
+
+Estrutura
+Front-end: jogos_v2 
+Back-end: webhook
+
+3 - instalar pacotes do npm
+cd webhook
+npm install
+
+
+
+4 - Editar variaveis de ambiente
+webhook/.env
+
+5 - instalar o ngrok
+
+6 - Inicializar api
+node app.js
+
+7 - abrir um tunel temporario na internet
+ngrok http 3000 ou porta da sua escolha
+enviar o url para o administrador da conta
+
+
+8 - Em outro terminal
+    1 - cd jogos_v2
+    2 - python -m venv .venv
+    3 - source .venv/bin/activate //comando para ativar o .venv no mac e no linux
+    3 - .venv/Scripts/activate //comando para ativar no linux
+    4 - pip install -r requirements.txt // instalar bibliotecas do projetos
+    5 - python main.py //arquivo principal que junta todas as telas
+
+9 . Ideias de melhoria
+O back foi implementado na tela de login e no jogo da roleta.
+Lógica simples: o front end envia uma cor(cor_cliente), o servidor gera uma cor aleatoria(cor_server), compara as duas
+

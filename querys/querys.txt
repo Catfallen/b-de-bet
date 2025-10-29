@@ -1,7 +1,0 @@
-Tabela Roleta
-id pk
-usuario_id fk
-aposta_id fk
-cor_cliente check ('B','R','W')
-cor_server check ('B','R','W')
-resultado
