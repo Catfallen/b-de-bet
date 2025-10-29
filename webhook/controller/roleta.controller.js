@@ -17,8 +17,6 @@ async function novaRoletaBet(req, res) {
         } else {
             resultado = true;
         }
-        //{userId,aposta_id,cor_cliente,cor_server,resultado}
-        //console.log({userId,valor,aposta_id,cor,corAleatoria,resultado,idRoleta})
         console.log(userId);
         console.log(aposta_id);
         
@@ -30,6 +28,7 @@ async function novaRoletaBet(req, res) {
         }
         //valor do req.valor
         let newValor = valor;
+        
         //resultado == true
         //Se for branco x14
         //Vermelho ou preto x2, no caso ele inverte o valor para positivo
@@ -47,10 +46,15 @@ async function novaRoletaBet(req, res) {
                 }
             }
         }
-
+        // Caso contrário ele apenas envia o valor padrão negativo
         console.log('novo valor: ');
         console.log(newValor);
+        //Atualiza a aposta com o novo valor e define o status para 'approved'
         const update = await betService.updateBet({ id: aposta_id, valor: newValor });
+        //Novamente o banco de dados chama uma função trigger after_update 
+        //e checka se a aposta foi aprovada.
+        //Se for aprovada ele insere um novo registro na tabela transações do tipo 'aposta' com valor + ou -
+
         if (update) {
             return res.status(200).json({ userId, valor, aposta_id, cor, corAleatoria, resultado, idRoleta });
         } else {

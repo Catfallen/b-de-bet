@@ -17,4 +17,3 @@ Resultado (verificar se são iguais)
 3. Se for igual, ele dobra o valor apostado / senão retorna o valor negativo
 4. No caso ele atualiza o valor da transação
 
-Por enquanto não implemente as mudanças só me de dicas
